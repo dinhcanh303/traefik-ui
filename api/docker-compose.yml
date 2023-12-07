@@ -1,0 +1,39 @@
+version: "3.7"
+volumes:
+  traefik_ui_data: {}
+networks:
+  traefik-ui-net:
+services:
+  # Postgres: The database used by Kong
+  traefik-database:
+    container_name: traefik-ui-postgres
+    image: postgres:9.6
+    restart: on-failure
+    networks:
+      - traefik-ui-net
+    volumes:
+      - traefik_ui_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: traefik
+      POSTGRES_PASSWORD: ${TREAFIK_PG_PASSWORD:-traefik}
+      POSTGRES_DB: traefik-ui
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "kong"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+  app:
+    build: . 
+    container_name: traefik-ui
+    volumes:
+      - ./:/app
+    ports:
+      - "${PORT}:${PORT}" 
+    restart: unless-stopped
+    depends_on:
+      - traefik-database
+    networks:
+      - traefik-ui-net
+  
