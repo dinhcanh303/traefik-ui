@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { classNames } from 'primereact/utils';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { ProductService } from '../services/ProductService';
+import { ProductService } from '../apis/ProductService';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 import { FileUpload } from 'primereact/fileupload';
@@ -16,7 +16,15 @@ import { InputNumber, InputNumberChangeEvent } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Tag } from 'primereact/tag';
-
+import { MultiSelect } from 'primereact/multiselect';
+import { TypeMiddleware } from '../types/type.middleware.type';
+import { Dropdown, DropdownChangeEvent, DropdownProps } from 'primereact/dropdown';
+import { FaAutoprefixer } from "react-icons/fa";
+import { CiUser } from "react-icons/ci";
+import { RiArrowGoForwardFill } from "react-icons/ri";
+import { Constant } from '../constants/constant';
+import { InputSwitch } from 'primereact/inputswitch';
+import ViewForwardAuth from '../components/ViewForwardAuth';
 interface Product {
   id: string | null;
   code: string;
@@ -53,7 +61,33 @@ const [submitted, setSubmitted] = useState<boolean>(false);
 const [globalFilter, setGlobalFilter] = useState<string>('');
 const toast = useRef<Toast>(null);
 const dt = useRef<DataTable<Product[]>>(null);
+const [selectedTypeMiddlewares, setSelectedTypeMiddlewares] = useState<TypeMiddleware | null>(null);
+const typeMiddlewares: TypeMiddleware[] = [
+    { name: 'Forward Auth', val: 'forwardAuth',icon :<RiArrowGoForwardFill />},
+    { name: 'Add Prefix', val: 'addPrefix' , icon: <FaAutoprefixer /> },
+    { name: 'Basic Auth', val: 'basicAuth',icon : <CiUser /> },
+];
+const selectedTypeMiddlewareTemplate = (option: TypeMiddleware, props: DropdownProps) => {
+    if (option) {
+        return (
+            <div className="flex align-items-center">
+                <div className="mr-1 mt-1">{option.icon}</div>
+                <div>{option.name}</div>
+            </div>
+        );
+    }
 
+    return <span>{props.placeholder}</span>;
+};
+
+const typeMiddlewareOptionTemplate = (option: TypeMiddleware) => {
+    return (
+        <div className="flex align-items-center">
+            <div className="mr-1 mt-1">{option.icon}</div>
+            <div>{option.name}</div>
+        </div>
+    );
+};
 useEffect(() => {
   ProductService.getProducts().then((data) => setProducts(data));
 }, []);
@@ -303,7 +337,7 @@ const saveProduct = () => {
                 </DataTable>
             </div>
 
-            <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Product Details" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
+            <Dialog visible={productDialog} style={{ width: '70rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Middleware Details" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
                 {product.image && <img src={`https://primefaces.org/cdn/primereact/images/product/${product.image}`} alt={product.image} className="product-image block m-auto pb-3" />}
                 <div className="field">
                     <label htmlFor="name" className="font-bold">
@@ -313,6 +347,12 @@ const saveProduct = () => {
                     {submitted && !product.name && <small className="p-error">Name is required.</small>}
                 </div>
                 <div className="field">
+                    <label className="mb-3 font-bold">Type</label>
+                    <Dropdown value={selectedTypeMiddlewares} onChange={(e: DropdownChangeEvent) => setSelectedTypeMiddlewares(e.value)} options={typeMiddlewares} optionLabel="name" placeholder="Select a TypeMiddleware" 
+                filter valueTemplate={selectedTypeMiddlewareTemplate} itemTemplate={typeMiddlewareOptionTemplate} className="w-full md:w-14rem" />
+                </div>
+                {renderViewByTypeMiddleware(selectedTypeMiddlewares?.val,submitted,product,onInputChange)}
+                {/* <div className="field">
                     <label htmlFor="description" className="font-bold">
                         Description
                     </label>
@@ -354,7 +394,7 @@ const saveProduct = () => {
                         </label>
                         <InputNumber id="quantity" value={product.quantity} onValueChange={(e) => onInputNumberChange(e, 'quantity')} />
                     </div>
-                </div>
+                </div> */}
             </Dialog>
 
             <Dialog visible={deleteProductDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
@@ -378,5 +418,17 @@ const saveProduct = () => {
     </>
   );
 };
+
+const renderViewByTypeMiddleware = (selectedTypeMiddlewares : string | undefined, submitted: boolean,product :Product ,onInputChange: any) => {
+    switch (selectedTypeMiddlewares) {
+        case Constant.FORWARD_AUTH:
+            return <ViewForwardAuth props={""}/>;
+    
+        default:
+            return <div></div>
+    }
+    
+}
+
 
 export default FormLayout;

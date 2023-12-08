@@ -5,5 +5,6 @@ const HttpController = require("../../controllers/http.controller");
 const router = express.Router();
 
 router.get("/routers", asyncHandler(HttpController.getAllRouter));
+router.get("/middlewares", asyncHandler(HttpController.getAllRouter));
 
 module.exports = router;

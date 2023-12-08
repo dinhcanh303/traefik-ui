@@ -52,6 +52,46 @@ http:
           - "Grpc-Metadata-X-Auth-Keystore"
           - "Grpc-Metadata-X-Auth-Keystore-Used"
         trustForwardHeader: true
+    auth1:
+      forwardAuth:
+        address: "http://proxy:5000/api/v1/auth/verify"
+        authResponseHeaders:
+          - "Grpc-Metadata-X-Auth-User"
+          - "Grpc-Metadata-X-Auth-Keystore"
+          - "Grpc-Metadata-X-Auth-Keystore-Used"
+        trustForwardHeader: true
+    auth2:
+      forwardAuth:
+        address: "http://proxy:5000/api/v1/auth/verify"
+        authResponseHeaders:
+          - "Grpc-Metadata-X-Auth-User"
+          - "Grpc-Metadata-X-Auth-Keystore"
+          - "Grpc-Metadata-X-Auth-Keystore-Used"
+        trustForwardHeader: true
+    auth3:
+      forwardAuth:
+        address: "http://proxy:5000/api/v1/auth/verify"
+        authResponseHeaders:
+          - "Grpc-Metadata-X-Auth-User"
+          - "Grpc-Metadata-X-Auth-Keystore"
+          - "Grpc-Metadata-X-Auth-Keystore-Used"
+        trustForwardHeader: true
+    auth4:
+      forwardAuth:
+        address: "http://proxy:5000/api/v1/auth/verify"
+        authResponseHeaders:
+          - "Grpc-Metadata-X-Auth-User"
+          - "Grpc-Metadata-X-Auth-Keystore"
+          - "Grpc-Metadata-X-Auth-Keystore-Used"
+        trustForwardHeader: true
+    auth5:
+      forwardAuth:
+        address: "http://proxy:5000/api/v1/auth/verify"
+        authResponseHeaders:
+          - "Grpc-Metadata-X-Auth-User"
+          - "Grpc-Metadata-X-Auth-Keystore"
+          - "Grpc-Metadata-X-Auth-Keystore-Used"
+        trustForwardHeader: true
 tls:
   certificates:
     - certFile: /path/to/public.cert

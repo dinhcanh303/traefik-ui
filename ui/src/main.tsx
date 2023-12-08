@@ -5,13 +5,19 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 import App from './App';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { PrimeReactProvider } from 'primereact/api';
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
 
-
+const queryClient = new QueryClient()
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <PrimeReactProvider>
     <React.StrictMode>
       <Router>
-      <App />
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
       </Router>
     </React.StrictMode>,
   </PrimeReactProvider>

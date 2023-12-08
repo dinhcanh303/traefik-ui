@@ -1,5 +1,6 @@
 import { lazy } from 'react';
 
+const HttpPage = lazy(() => import('../pages/HttpPage'));
 const HttpLayout = lazy(() => import('../pages/HttpLayout'));
 const Profile = lazy(() => import('../pages/Profile'));
 const Settings = lazy(() => import('../pages/Settings'));
@@ -23,7 +24,7 @@ const coreRoutes = [
   {
     path: '/http/middlewares',
     title: 'HTTP Middlewares',
-    component: HttpLayout,
+    component: HttpPage,
   },
   {
     path: '/settings',
